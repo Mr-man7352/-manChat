@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1033680317376",
+    "project_id": "manchat-b8b4e",
+    "storage_bucket": "manchat-b8b4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033680317376:android:bea22dd8270380b76d7625",
+        "android_client_info": {
+          "package_name": "com.manchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033680317376-i7n90g74tbi10fodlrtdqos1jsadfc8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRJOjJez44H48ljRF0MeyfQYgeTKq5qkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033680317376-i7n90g74tbi10fodlrtdqos1jsadfc8o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
