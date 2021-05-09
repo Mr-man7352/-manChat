@@ -5,15 +5,13 @@ import {
   Image,
   StyleSheet,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 
-export default function SignupScreen() {
+export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [image, setImage] = useState(null);
-  const [showNext, setShowNext] = useState(false);
 
   return (
     <KeyboardAvoidingView behavior="position">
@@ -27,47 +25,27 @@ export default function SignupScreen() {
         </View>
 
         <View style={styles.box2}>
-          {!showNext && (
-            <>
-              <TextInput
-                label="Email"
-                mode="outlined"
-                value={email}
-                onChangeText={text => setEmail(text)}
-              />
+          <TextInput
+            label="Email"
+            mode="outlined"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
 
-              <TextInput
-                label="Password"
-                mode="outlined"
-                value={password}
-                onChangeText={text => setPassword(text)}
-                secureTextEntry={true}
-              />
-            </>
-          )}
+          <TextInput
+            label="Password"
+            mode="outlined"
+            value={password}
+            onChangeText={text => setPassword(text)}
+            secureTextEntry={true}
+          />
 
-          {showNext ? (
-            <>
-              <TextInput
-                label="Name"
-                mode="outlined"
-                value={name}
-                onChangeText={text => setName(text)}
-                secureTextEntry={true}
-              />
-
-              <Button icon="camera" mode="contained" onPress={() => {}}>
-                Select Profile Pic
-              </Button>
-              <Button mode="contained" onPress={() => {}}>
-                Signup
-              </Button>
-            </>
-          ) : (
-            <Button mode="contained" onPress={() => setShowNext(true)}>
-              Next
-            </Button>
-          )}
+          <Button mode="contained" onPress={() => {}}>
+            Login
+          </Button>
+          <TouchableOpacity onPress={() => navigation.navigate('signup')}>
+            <Text style={{textAlign: 'center'}}>Dont have an account ?</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>

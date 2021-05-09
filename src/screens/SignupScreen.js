@@ -5,10 +5,11 @@ import {
   Image,
   StyleSheet,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 
-export default function SignupScreen() {
+export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -17,58 +18,56 @@ export default function SignupScreen() {
 
   return (
     <KeyboardAvoidingView behavior="position">
-      <View>
-        <View style={styles.box1}>
-          <Text style={styles.text}>Welcome to my man chat</Text>
-          <Image
-            style={styles.img}
-            source={require('../assets/manchat2.png')}
-          />
-        </View>
+      <View style={styles.box1}>
+        <Text style={styles.text}>Welcome to my man chat</Text>
+        <Image style={styles.img} source={require('../assets/manchat2.png')} />
+      </View>
 
-        <View style={styles.box2}>
-          {!showNext && (
-            <>
-              <TextInput
-                label="Email"
-                mode="outlined"
-                value={email}
-                onChangeText={text => setEmail(text)}
-              />
+      <View style={styles.box2}>
+        {!showNext && (
+          <>
+            <TextInput
+              label="Email"
+              mode="outlined"
+              value={email}
+              onChangeText={text => setEmail(text)}
+            />
 
-              <TextInput
-                label="Password"
-                mode="outlined"
-                value={password}
-                onChangeText={text => setPassword(text)}
-                secureTextEntry={true}
-              />
-            </>
-          )}
+            <TextInput
+              label="Password"
+              mode="outlined"
+              value={password}
+              onChangeText={text => setPassword(text)}
+              secureTextEntry={true}
+            />
+          </>
+        )}
 
-          {showNext ? (
-            <>
-              <TextInput
-                label="Name"
-                mode="outlined"
-                value={name}
-                onChangeText={text => setName(text)}
-                secureTextEntry={true}
-              />
+        {showNext ? (
+          <>
+            <TextInput
+              label="Name"
+              mode="outlined"
+              value={name}
+              onChangeText={text => setName(text)}
+              secureTextEntry={true}
+            />
 
-              <Button icon="camera" mode="contained" onPress={() => {}}>
-                Select Profile Pic
-              </Button>
-              <Button mode="contained" onPress={() => {}}>
-                Signup
-              </Button>
-            </>
-          ) : (
-            <Button mode="contained" onPress={() => setShowNext(true)}>
-              Next
+            <Button icon="camera" mode="contained" onPress={() => {}}>
+              Select Profile Pic
             </Button>
-          )}
-        </View>
+            <Button mode="contained" onPress={() => {}}>
+              Signup
+            </Button>
+          </>
+        ) : (
+          <Button mode="contained" onPress={() => setShowNext(true)}>
+            Next
+          </Button>
+        )}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={{textAlign: 'center'}}>Already have an account ?</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
