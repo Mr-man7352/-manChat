@@ -6,15 +6,71 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
-
+import {launchImageLibrary} from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [image, setImage] = useState(null);
   const [showNext, setShowNext] = useState(false);
+  const [loading, setLoading] = useState(false);
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  const userSignup = async () => {
+    setLoading(true);
+    if (!email || !password || !image || !name) {
+      alert('please add all the field');
+      return;
+    }
+    try {
+      const result = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      firestore().collection('users').doc(result.user.uid).set({
+        name: name,
+        email: result.user.email,
+        uid: result.user.uid,
+        pic: image,
+      });
+      setLoading(false);
+    } catch (err) {
+      alert(err.message, 5000);
+    }
+  };
+
+  const pickImageAndUpload = () => {
+    launchImageLibrary({quality: 0.5}, fileobj => {
+      const uploadTask = storage()
+        .ref()
+        .child(`/userprofile/${Date.now()}`)
+        .putFile(fileobj.uri);
+
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          if (progress == 100) alert('image uploaded');
+        },
+        error => {
+          alert('error uploading image');
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+            setImage(downloadURL);
+          });
+        },
+      );
+    });
+  };
 
   return (
     <KeyboardAvoidingView behavior="position">
@@ -50,13 +106,18 @@ export default function SignupScreen({navigation}) {
               mode="outlined"
               value={name}
               onChangeText={text => setName(text)}
-              secureTextEntry={true}
             />
 
-            <Button icon="camera" mode="contained" onPress={() => {}}>
+            <Button
+              icon="camera"
+              mode="contained"
+              onPress={() => pickImageAndUpload()}>
               Select Profile Pic
             </Button>
-            <Button mode="contained" onPress={() => {}}>
+            <Button
+              mode="contained"
+              disabled={image ? false : true}
+              onPress={() => userSignup()}>
               Signup
             </Button>
           </>

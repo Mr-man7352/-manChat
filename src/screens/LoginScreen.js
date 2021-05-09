@@ -6,12 +6,32 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
+import auth from '@react-native-firebase/auth';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  const userLogin = async () => {
+    setLoading(true);
+    if (!email || !password) {
+      alert('please add all the field');
+      return;
+    }
+    try {
+      const result = await auth().signInWithEmailAndPassword(email, password);
+      setLoading(false);
+    } catch (err) {
+      alert(err.message, 5000);
+    }
+  };
 
   return (
     <KeyboardAvoidingView behavior="position">
@@ -40,7 +60,7 @@ export default function LoginScreen({navigation}) {
             secureTextEntry={true}
           />
 
-          <Button mode="contained" onPress={() => {}}>
+          <Button mode="contained" onPress={() => userLogin()}>
             Login
           </Button>
           <TouchableOpacity onPress={() => navigation.navigate('signup')}>
