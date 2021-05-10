@@ -21,7 +21,7 @@ export default function SignupScreen({navigation}) {
   const [showNext, setShowNext] = useState(false);
   const [loading, setLoading] = useState(false);
   if (loading) {
-    return <ActivityIndicator size="large" color="#00ff00" />;
+    return <ActivityIndicator size="large" color="#3c1f61" />;
   }
   const userSignup = async () => {
     setLoading(true);
@@ -39,6 +39,7 @@ export default function SignupScreen({navigation}) {
         email: result.user.email,
         uid: result.user.uid,
         pic: image,
+        status: 'online',
         password: password,
       });
       setLoading(false);

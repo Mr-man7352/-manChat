@@ -18,6 +18,8 @@ import auth from '@react-native-firebase/auth';
 import HomeScreen from './screens/HomeScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ChatScreen from './screens/ChatScreen';
+import firestore from '@react-native-firebase/firestore';
+import AccountScreen from './screens/AccountScreen';
 const theme = {
   ...DefaultTheme,
   roundness: 2,
@@ -36,6 +38,10 @@ const Navigation = () => {
     const unregister = auth().onAuthStateChanged(userExist => {
       if (userExist) {
         setUser(userExist);
+        firestore()
+          .collection('users')
+          .doc(userExist.uid)
+          .update({status: 'online'});
       } else setUser('');
     });
 
@@ -57,7 +63,17 @@ const Navigation = () => {
                     size={34}
                     color="#04344c"
                     style={{marginRight: 10}}
-                    onPress={() => auth().signOut()}
+                    onPress={() => {
+                      firestore()
+                        .collection('users')
+                        .doc(user.uid)
+                        .update({
+                          status: firestore.FieldValue.serverTimestamp(),
+                        })
+                        .then(() => {
+                          auth().signOut();
+                        });
+                    }}
                   />
                 ),
                 title: 'ManChat',
@@ -67,8 +83,19 @@ const Navigation = () => {
 
             <Stack.Screen
               name="chat"
-              options={({route}) => ({title: route.params.name})}>
+              options={({route}) => ({
+                title: (
+                  <View>
+                    <Text>{route.params.name}</Text>
+                    <Text>{route.params.status} </Text>
+                  </View>
+                ),
+              })}>
               {props => <ChatScreen {...props} user={user} />}
+            </Stack.Screen>
+
+            <Stack.Screen name="account">
+              {props => <AccountScreen {...props} user={user} />}
             </Stack.Screen>
           </>
         ) : (

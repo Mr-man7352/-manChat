@@ -21,6 +21,7 @@ export default function ChatScreen({user, route}) {
     });
     setMessages(allmsg);
   };
+
   useEffect(() => {
     // getAllMessages();
     const docid = uid > user.uid ? user.uid + '-' + uid : uid + '-' + user.uid;
@@ -31,23 +32,27 @@ export default function ChatScreen({user, route}) {
       .collection('messages')
       .orderBy('createdAt', 'desc');
 
-    messageRef.onSnapshot(querySanp => {
-      const allmsg = querySanp.docs.map(docSnap => {
-        const data = docSnap.data();
+    const unSubscribe = messageRef.onSnapshot(querySnap => {
+      const allmsg = querySnap.docs.map(docSanp => {
+        const data = docSanp.data();
         if (data.createdAt) {
           return {
-            ...docSnap.data(),
-            createdAt: docSnap.data().createdAt.toDate(),
+            ...docSanp.data(),
+            createdAt: docSanp.data().createdAt.toDate(),
           };
         } else {
           return {
-            ...docSnap.data(),
+            ...docSanp.data(),
             createdAt: new Date(),
           };
         }
       });
       setMessages(allmsg);
     });
+
+    return () => {
+      unSubscribe();
+    };
   }, []);
 
   const onSend = messageArray => {

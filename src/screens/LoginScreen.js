@@ -17,7 +17,7 @@ export default function LoginScreen({navigation}) {
   const [password, setPassword] = useState('');
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#00ff00" />;
+    return <ActivityIndicator size="large" color="#3c1f61" />;
   }
   const userLogin = async () => {
     setLoading(true);
