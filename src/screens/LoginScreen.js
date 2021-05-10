@@ -30,6 +30,7 @@ export default function LoginScreen({navigation}) {
       setLoading(false);
     } catch (err) {
       alert(err.message, 5000);
+      setLoading(false);
     }
   };
 

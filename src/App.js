@@ -17,6 +17,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 import HomeScreen from './screens/HomeScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ChatScreen from './screens/ChatScreen';
 const theme = {
   ...DefaultTheme,
   roundness: 2,
@@ -46,21 +47,30 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerTintColor: '#04344c'}}>
         {user ? (
-          <Stack.Screen
-            name="home"
-            options={{
-              headerRight: () => (
-                <MaterialIcons
-                  name="account-circle"
-                  size={34}
-                  color="#04344c"
-                  style={{marginRight: 10}}
-                  onPress={() => auth().signout()}
-                />
-              ),
-            }}>
-            {props => <HomeScreen {...props} user={user} />}
-          </Stack.Screen>
+          <>
+            <Stack.Screen
+              name="home"
+              options={{
+                headerRight: () => (
+                  <MaterialIcons
+                    name="account-circle"
+                    size={34}
+                    color="#04344c"
+                    style={{marginRight: 10}}
+                    onPress={() => auth().signOut()}
+                  />
+                ),
+                title: 'ManChat',
+              }}>
+              {props => <HomeScreen {...props} user={user} />}
+            </Stack.Screen>
+
+            <Stack.Screen
+              name="chat"
+              options={({route}) => ({title: route.params.name})}>
+              {props => <ChatScreen {...props} user={user} />}
+            </Stack.Screen>
+          </>
         ) : (
           <>
             <Stack.Screen

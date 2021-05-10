@@ -18,7 +18,6 @@ export default function HomeScreen({user, navigation}) {
       .where('uid', '!=', user.uid)
       .get();
     const allusers = querySanp.docs.map(docSnap => docSnap.data());
-    //  console.log(allusers)
     setUsers(allusers);
   };
 
@@ -33,10 +32,10 @@ export default function HomeScreen({user, navigation}) {
           navigation.navigate('chat', {
             name: item.name,
             uid: item.uid,
-            status:
-              typeof item.status == 'string'
-                ? item.status
-                : item.status.toDate().toString(),
+            // status:
+            //   typeof item.status == 'string'
+            //     ? item.status
+            //     : item.status.toDate().toString(),
           })
         }>
         <View style={styles.mycard}>

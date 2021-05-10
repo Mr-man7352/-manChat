@@ -39,10 +39,12 @@ export default function SignupScreen({navigation}) {
         email: result.user.email,
         uid: result.user.uid,
         pic: image,
+        password: password,
       });
       setLoading(false);
     } catch (err) {
       alert(err.message, 5000);
+      setLoading(false);
     }
   };
 
