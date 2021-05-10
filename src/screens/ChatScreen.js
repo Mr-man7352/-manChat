@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, InputToolbar} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 export default function ChatScreen({user, route}) {
   const [messages, setMessages] = useState([]);
@@ -22,7 +22,32 @@ export default function ChatScreen({user, route}) {
     setMessages(allmsg);
   };
   useEffect(() => {
-    getAllMessages();
+    // getAllMessages();
+    const docid = uid > user.uid ? user.uid + '-' + uid : uid + '-' + user.uid;
+
+    const messageRef = firestore()
+      .collection('chatrooms')
+      .doc(docid)
+      .collection('messages')
+      .orderBy('createdAt', 'desc');
+
+    messageRef.onSnapshot(querySanp => {
+      const allmsg = querySanp.docs.map(docSnap => {
+        const data = docSnap.data();
+        if (data.createdAt) {
+          return {
+            ...docSnap.data(),
+            createdAt: docSnap.data().createdAt.toDate(),
+          };
+        } else {
+          return {
+            ...docSnap.data(),
+            createdAt: new Date(),
+          };
+        }
+      });
+      setMessages(allmsg);
+    });
   }, []);
 
   const onSend = messageArray => {
@@ -43,12 +68,36 @@ export default function ChatScreen({user, route}) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: '#dcdee0'}}>
       <GiftedChat
         messages={messages}
         onSend={text => onSend(text)}
         user={{
           _id: user.uid,
+        }}
+        renderBubble={props => {
+          return (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                right: {
+                  backgroundColor: '#04344c',
+                },
+                left: {
+                  backgroundColor: '#4486ad',
+                },
+              }}
+            />
+          );
+        }}
+        renderInputToolbar={props => {
+          return (
+            <InputToolbar
+              {...props}
+              containerStyle={{borderTopWidth: 1.5, borderTopColor: '#2596be'}}
+              textInputStyle={{color: '#092e5b'}}
+            />
+          );
         }}
       />
     </View>
